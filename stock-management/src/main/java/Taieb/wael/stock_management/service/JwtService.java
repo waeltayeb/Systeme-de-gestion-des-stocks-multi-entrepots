@@ -12,7 +12,7 @@ public class JwtService {
     private final JwtUtils jwtUtils;
 
     public String generateToken(Utilisateur utilisateur) {
-        // Ici on utilise juste l'email comme username pour le token
-        return jwtUtils.generateToken(utilisateur.getEmail());
+        // On passe maintenant l'email et le rôle pour le token
+        return jwtUtils.generateToken(utilisateur.getEmail(), utilisateur.getRole());
     }
 }

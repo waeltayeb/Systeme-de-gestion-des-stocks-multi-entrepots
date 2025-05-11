@@ -1,13 +1,16 @@
 package Taieb.wael.stock_management.controller;
 
 
+import Taieb.wael.stock_management.dto.ProduitDTO;
 import Taieb.wael.stock_management.entity.Produit;
 import Taieb.wael.stock_management.service.ProduitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/produits")
@@ -18,8 +21,11 @@ public class ProduitController {
     private ProduitService produitService;
 
     @GetMapping
-    public List<Produit> getAllProduits() {
-        return produitService.getAllProduits();
+    public List<ProduitDTO> getProduits() {
+        List<Produit> produits = produitService.getAllProduits();
+        return produits.stream()
+                .map(ProduitDTO::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -38,6 +44,7 @@ public class ProduitController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteProduit(@PathVariable Long id) {
         produitService.deleteProduit(id);
     }

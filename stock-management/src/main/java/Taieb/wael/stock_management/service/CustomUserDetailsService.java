@@ -23,7 +23,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(
                 utilisateur.getEmail(),
                 utilisateur.getMotDePasse(),
-                Collections.singleton(new SimpleGrantedAuthority(utilisateur.getRole()))
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + utilisateur.getRole().toUpperCase())
+                )
         );
     }
 }

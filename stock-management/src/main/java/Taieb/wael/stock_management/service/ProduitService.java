@@ -2,6 +2,7 @@ package Taieb.wael.stock_management.service;
 
 import Taieb.wael.stock_management.entity.Produit;
 import Taieb.wael.stock_management.repository.ProduitRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class ProduitService {
     @Autowired
     private ProduitRepository produitRepository;
 
+    @Transactional
     public List<Produit> getAllProduits() {
         return produitRepository.findAll();
     }
