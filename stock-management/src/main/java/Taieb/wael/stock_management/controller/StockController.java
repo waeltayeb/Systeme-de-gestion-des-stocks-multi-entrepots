@@ -3,6 +3,7 @@ package Taieb.wael.stock_management.controller;
 import Taieb.wael.stock_management.entity.Stock;
 import Taieb.wael.stock_management.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class StockController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteStock(@PathVariable Long id) {
         stockService.deleteStock(id);
     }

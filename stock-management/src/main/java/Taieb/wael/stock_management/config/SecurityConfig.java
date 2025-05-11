@@ -1,5 +1,7 @@
 package Taieb.wael.stock_management.config;
 
+import Taieb.wael.stock_management.security.CustomAccessDeniedHandler;
+import Taieb.wael.stock_management.security.CustomAuthenticationEntryPoint;
 import Taieb.wael.stock_management.security.JwtAuthFilter;
 import Taieb.wael.stock_management.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,9 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,10 +44,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/produits/**").permitAll()
                         .requestMatchers("/api/entrepots/**").permitAll()
+                        .requestMatchers("/api/stocks/**").permitAll()
+                        .requestMatchers("/api/mouvements/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/entrepots/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
+
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

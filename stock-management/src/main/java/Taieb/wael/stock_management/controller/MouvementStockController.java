@@ -6,6 +6,7 @@ import Taieb.wael.stock_management.dto.MouvementStockDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class MouvementStockController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteMouvement(@PathVariable Long id) {
         mouvementStockService.deleteMouvement(id);
     }
