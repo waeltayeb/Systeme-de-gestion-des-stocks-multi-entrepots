@@ -1,5 +1,5 @@
 <!-- dashboard.component.html -->
-<div class="min-h-screen bg-gray-100 p-6">
+<div class="min-h-screen bg-gray-100 p-6 w-auto ">
   <!-- Header -->
   <div class="mb-6 flex items-center justify-between">
     <h1 class="text-3xl font-bold text-gray-800">Dashboard de Gestion des Stocks</h1>
@@ -13,12 +13,12 @@
 
   <!-- Metrics Cards Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <!-- Carte Stock Total -->
+    <!-- Carte Produit Total -->
     <div class="bg-white p-6 rounded-xl shadow-sm">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-gray-500 text-sm">Stock Total</p>
-          <p class="text-3xl font-bold text-gray-800">15,234</p>
+          <p class="text-gray-500 text-sm">Produit Total</p>
+          <p class="text-3xl font-bold text-gray-800">{{ produitsTotal }}</p>
         </div>
         <div class="p-3 bg-blue-100 rounded-lg">
           <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,8 +26,49 @@
           </svg>
         </div>
       </div>
-      <div class="mt-4">
-        <span class="text-green-500 text-sm">↑ 12% vs mois dernier</span>
+    </div>
+    <!-- Carte Stock Total -->
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm">Stock Total</p>
+          <p class="text-3xl font-bold text-gray-800">{{ stocksTotal }}</p>
+        </div>
+        <div class="p-3 bg-blue-100 rounded-lg">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Entropts Total -->
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm">Entrepôt Total</p>
+          <p class="text-3xl font-bold text-gray-800">{{ entrepotsTotal }}</p>
+        </div>
+        <div class="p-3 bg-blue-100 rounded-lg">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Movements Total -->
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm">Mouvement Total</p>
+          <p class="text-3xl font-bold text-gray-800">{{ mouvementsTotal }}</p>
+        </div>
+        <div class="p-3 bg-blue-100 rounded-lg">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+        </div>
       </div>
     </div>
 
