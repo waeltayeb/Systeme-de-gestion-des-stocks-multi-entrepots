@@ -1,0 +1,98 @@
+<div class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">
+        {{product.id === 0 ? 'Ajouter un produit' : 'Modifier le produit'}}
+      </h3>
+    </div>
+    <div class="px-6 py-4">
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="product.nom" 
+              name="name"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+          </div>
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700">Catégorie</label>
+            <input 
+              type="text" 
+              id="category" 
+              [(ngModel)]="product.categorie" 
+              name="category"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+          </div>
+          <div>
+            <label for="price" class="block text-sm font-medium text-gray-700">Prix</label>
+            <input 
+              type="number" 
+              id="price" 
+              [(ngModel)]="product.prix" 
+              name="price"
+              min="0"
+              step="0.01"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+          </div>
+          <div>
+            <label for="supplier" class="block text-sm font-medium text-gray-700">Fournisseur</label>
+            <input 
+              type="text" 
+              id="supplier" 
+              [(ngModel)]="product.fournisseur" 
+              name="supplier"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+          </div>
+          <div>
+            <label for="minThreshold" class="block text-sm font-medium text-gray-700">Seuil minimum</label>
+            <input 
+              type="number" 
+              id="minThreshold" 
+              [(ngModel)]="product.seuilMin" 
+              name="minThreshold"
+              min="1"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+          </div>
+          <!-- <div>
+            <label for="imageUrl" class="block text-sm font-medium text-gray-700">URL de l'image</label>
+            <input 
+              type="text" 
+              id="imageUrl" 
+              [(ngModel)]="product.imageUrl" 
+              name="imageUrl"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+          </div> -->
+        </div>
+        <div class="flex justify-end space-x-3 pt-4">
+          <button 
+            type="button" 
+            (click)="close.emit()"
+            class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Annuler
+          </button>
+          <button 
+            type="submit" 
+            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

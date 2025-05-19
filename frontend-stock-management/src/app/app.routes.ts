@@ -2,24 +2,21 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
+import { ProductComponent } from './pages/product/product.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-
-
-
-     {
+  { path: 'login', component: LoginComponent },
+  {
     path: 'dashboard',
     component: SidebarComponent, // Layout avec sidebar
-    children: [
-      { path: '', component: DashboardComponent },
-    ]
+    children: [{ path: '', component: DashboardComponent, canActivate: [AuthGuard] }],
   },
-    
-
-
-
-
-   // { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent) }
+  {
+    path: 'produits',
+    component: SidebarComponent, // Layout avec sidebar
+    children: [{ path: '', component: ProductComponent, canActivate: [AuthGuard] }],
+  },
+  { path: '**', redirectTo: 'dashboard' }
 
 ];
