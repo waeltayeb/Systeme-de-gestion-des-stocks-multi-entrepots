@@ -8,6 +8,10 @@ import { ProductModalComponent } from '../../components/product-modal/product-mo
 import { StockMovementModalComponent } from '../../components/stock-movement-modal/stock-movement-modal.component';
 
 import { ProduitService } from '../../services/produit.service';
+import { ToastrService } from 'ngx-toastr';
+import { ToastrModule } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-product',
@@ -19,10 +23,13 @@ import { ProduitService } from '../../services/produit.service';
     CommonModule, 
     ProductModalComponent,
     StockMovementModalComponent,
+    ToastrModule
     
   ]
 })
 export class ProductComponent implements OnInit {
+
+
   // Propriétés pour la pagination et les filtres
   currentPage: number = 1;
   itemsPerPage: number = 10;
@@ -47,7 +54,10 @@ export class ProductComponent implements OnInit {
   
   public Math = Math;
 
-  constructor(private produitService: ProduitService) {}
+  constructor(private produitService: ProduitService,
+    private toastr: ToastrService 
+    
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -117,10 +127,22 @@ export class ProductComponent implements OnInit {
     this.showStockMovementModal = true;
   }
 
-  confirmDelete(product: Product): void {
-    this.productToDelete = product;
-    this.showConfirmDialog = true;
-  }
+ confirmDelete(product: Product): void {
+  this.productToDelete = product;
+
+  Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: 'Voulez-vous vraiment supprimer ce produit ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.deleteProduct();
+    }
+  });
+}
 
   closeModal(): void {
     this.showProductModal = false;
@@ -159,17 +181,26 @@ export class ProductComponent implements OnInit {
 
 
   deleteProduct(): void {
-    if (this.productToDelete) {
-      this.produitService.deleteProduit(this.productToDelete.id).subscribe({
-        next: () => {
-          this.products = this.products.filter(p => p.id !== this.productToDelete?.id);
-          this.applyFilters();
-        },
-        error: (err) => console.error('Erreur suppression produit:', err)
-      });
-      this.closeModal();
-    }
+  if (this.productToDelete) {
+    this.produitService.deleteProduit(this.productToDelete.id).subscribe({
+      next: () => {
+        this.products = this.products.filter(p => p.id !== this.productToDelete?.id);
+        this.applyFilters();
+        Swal.fire('Succès', 'Produit supprimé avec succès', 'success');
+      },
+      error: (err) => {
+        console.error('Erreur suppression produit:', err);
+        if (err.status === 403) {
+          Swal.fire('Accès refusé', 'Seul un administrateur peut supprimer un produit.', 'error');
+        } else {
+          Swal.fire('Erreur', 'Erreur lors de la suppression du produit', 'error');
+        }
+      }
+    });
   }
+}
+
+
 
   // Pagination
   updatePagination(): void {

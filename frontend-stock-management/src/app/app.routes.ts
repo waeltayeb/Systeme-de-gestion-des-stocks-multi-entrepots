@@ -4,6 +4,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
 import { ProductComponent } from './pages/product/product.component';
 import { AuthGuard } from './guards/auth.guard';
+import { EntrepotComponent } from './pages/entrepot/entrepot.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,6 +17,11 @@ export const routes: Routes = [
     path: 'produits',
     component: SidebarComponent, // Layout avec sidebar
     children: [{ path: '', component: ProductComponent, canActivate: [AuthGuard] }],
+  },
+  {
+    path: 'entrepots',
+    component: SidebarComponent, // Layout avec sidebar
+    children: [{ path: '', component: EntrepotComponent, canActivate: [AuthGuard] }],
   },
   { path: '**', redirectTo: 'dashboard' }
 
