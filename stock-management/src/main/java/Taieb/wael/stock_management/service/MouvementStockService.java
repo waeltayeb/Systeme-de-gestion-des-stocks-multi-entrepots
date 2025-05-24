@@ -1,6 +1,7 @@
 package Taieb.wael.stock_management.service;
 
 import Taieb.wael.stock_management.dto.MouvementStockDTO;
+import Taieb.wael.stock_management.dto.MouvementStockResponseDTO;
 import Taieb.wael.stock_management.exception.StockInsuffisantException;
 import Taieb.wael.stock_management.entity.*;
 import Taieb.wael.stock_management.repository.*;
@@ -27,9 +28,19 @@ public class MouvementStockService {
     @Autowired
     private MouvementStockRepository mouvementStockRepository;
 
-    public List<MouvementStock> getAllMouvements() {
-        return mouvementStockRepository.findAll();
+    public List<MouvementStockResponseDTO> getAllMouvements() {
+        return mouvementStockRepository.findAll().stream().map(m -> {
+            MouvementStockResponseDTO dto = new MouvementStockResponseDTO();
+            dto.setId(m.getId());
+            dto.setProduitNom(m.getProduit().getNom());
+            dto.setEntrepotNom(m.getEntrepot().getNom());
+            dto.setType(m.getType().name());
+            dto.setQuantite(m.getQuantite());
+            dto.setDate(m.getDate());
+            return dto;
+        }).toList();
     }
+
 
     public Optional<MouvementStock> getMouvementById(Long id) {
         return mouvementStockRepository.findById(id);

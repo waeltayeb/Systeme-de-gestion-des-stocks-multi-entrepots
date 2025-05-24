@@ -1,5 +1,6 @@
 package Taieb.wael.stock_management.controller;
 
+import Taieb.wael.stock_management.dto.MouvementStockResponseDTO;
 import Taieb.wael.stock_management.entity.MouvementStock;
 import Taieb.wael.stock_management.service.MouvementStockService;
 import Taieb.wael.stock_management.dto.MouvementStockDTO;
@@ -22,9 +23,10 @@ public class MouvementStockController {
     private MouvementStockService mouvementStockService;
 
     @GetMapping
-    public List<MouvementStock> getAllMouvements() {
-        return mouvementStockService.getAllMouvements();
+    public ResponseEntity<List<MouvementStockResponseDTO>> getAllMouvements() {
+        return ResponseEntity.ok(mouvementStockService.getAllMouvements());
     }
+
 
     @GetMapping("/{id}")
     public Optional<MouvementStock> getMouvementById(@PathVariable Long id) {

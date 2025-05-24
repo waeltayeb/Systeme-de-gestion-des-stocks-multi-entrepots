@@ -1,0 +1,72 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Créer un compte
+      </h2>
+    </div>
+    <form class="mt-8 space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="rounded-md shadow-sm space-y-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" formControlName="email"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                 [class.border-red-300]="email?.invalid && (email?.dirty || email?.touched)"
+                 [class.text-red-900]="email?.invalid && (email?.dirty || email?.touched)">
+          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="mt-1 text-sm text-red-600">
+            <span *ngIf="email?.errors?.['required']">L'email est requis</span>
+            <span *ngIf="email?.errors?.['email']">Veuillez entrer un email valide</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="motDePasse" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <input id="motDePasse" name="motDePasse" type="password" formControlName="motDePasse"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                 [class.border-red-300]="motDePasse?.invalid && (motDePasse?.dirty || motDePasse?.touched)"
+                 [class.text-red-900]="motDePasse?.invalid && (motDePasse?.dirty || motDePasse?.touched)">
+          <div *ngIf="motDePasse?.invalid && (motDePasse?.dirty || motDePasse?.touched)" class="mt-1 text-sm text-red-600">
+            <span *ngIf="motDePasse?.errors?.['required']">Le mot de passe est requis</span>
+            <span *ngIf="motDePasse?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
+          <input id="confirmPassword" name="confirmPassword" type="password" formControlName="confirmPassword"
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                 [class.border-red-300]="(confirmPassword?.invalid || registerForm.errors?.['mismatch']) && (confirmPassword?.dirty || confirmPassword?.touched)"
+                 [class.text-red-900]="(confirmPassword?.invalid || registerForm.errors?.['mismatch']) && (confirmPassword?.dirty || confirmPassword?.touched)">
+          <div *ngIf="(confirmPassword?.invalid || registerForm.errors?.['mismatch']) && (confirmPassword?.dirty || confirmPassword?.touched)" 
+               class="mt-1 text-sm text-red-600">
+            <span *ngIf="confirmPassword?.errors?.['required']">La confirmation est requise</span>
+            <span *ngIf="registerForm.errors?.['mismatch']">Les mots de passe ne correspondent pas</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" [disabled]="registerForm.invalid || isLoading"
+                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="!isLoading">S'inscrire</span>
+          <span *ngIf="isLoading" class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Traitement...
+          </span>
+        </button>
+      </div>
+    </form>
+
+    <div class="text-center">
+      <p class="text-sm text-gray-600">
+        Déjà un compte? 
+        <a routerLink="/login" class="font-medium text-blue-600 hover:text-blue-500">
+          Connectez-vous
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

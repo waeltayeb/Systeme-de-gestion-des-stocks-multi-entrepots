@@ -21,7 +21,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService userDetailsService;
-
+/*
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -30,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith("Bearer")) {
             String token = authHeader.substring(7);
 
             String username = jwtUtils.getUsernameFromToken(token);
@@ -56,5 +56,56 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }*/
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+        // ✅ Ignorer les routes publiques
+        if (path.startsWith("/api/auth") || path.startsWith("/api/mouvements")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+
+            try {
+                String username = jwtUtils.getUsernameFromToken(token);
+
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                    if (jwtUtils.validateToken(token)) {
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                        UsernamePasswordAuthenticationToken auth =
+                                new UsernamePasswordAuthenticationToken(
+                                        userDetails,
+                                        null,
+                                        userDetails.getAuthorities()
+                                );
+
+                        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(auth);
+                    }
+                }
+
+            } catch (Exception e) {
+                // ⚠️ Token invalide → ne pas bloquer les routes autorisées
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid or expired token.");
+                return;
+            }
+        }
+
+        filterChain.doFilter(request, response);
     }
+
 }

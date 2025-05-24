@@ -1,7 +1,10 @@
 package Taieb.wael.stock_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,4 +21,9 @@ public class Entrepot {
     private String nom;
     private String adresse;
     private int capacite;
+
+    @OneToMany(mappedBy = "entrepot")
+    @JsonIgnore
+    private List<MouvementStock> mouvements;
+
 }

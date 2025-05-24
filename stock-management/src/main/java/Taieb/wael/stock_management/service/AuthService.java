@@ -27,7 +27,7 @@ public class AuthService {
                 .email(request.getEmail())
                 .motDePasse(passwordEncoder.encode(request.getMotDePasse()))
                 .nom(request.getNom())
-                .role("admin")
+                .role("user")
                 .build();
 
         UtilisateurRepository.save(user);

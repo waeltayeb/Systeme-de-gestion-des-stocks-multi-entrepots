@@ -1,0 +1,149 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Journal des Mouvements</h1>
+    <div class="flex space-x-3">
+      <button (click)="openAddModal('ENTREE')" class="btn-primary bg-green-600 hover:bg-green-700">
+        <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
+        </svg>
+        Entrée stock
+      </button>
+      <button (click)="openAddModal('SORTIE')" class="btn-primary bg-red-600 hover:bg-red-700">
+        <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"/>
+        </svg>
+        Sortie stock
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="bg-white rounded-lg shadow p-4 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Recherche</label>
+      <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" 
+             placeholder="Produit, entrepôt..."
+             class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+      <select [(ngModel)]="typeMouvement" (change)="applyFilters()" 
+              class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        <option value="">Tous</option>
+        <option value="ENTREE">Entrée</option>
+        <option value="SORTIE">Sortie</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Date début</label>
+      <input type="date" [(ngModel)]="dateDebut" (change)="applyFilters()"
+             class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Date fin</label>
+      <input type="date" [(ngModel)]="dateFin" (change)="applyFilters()"
+             class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+    </div>
+  </div>
+
+  <!-- Tableau des mouvements -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="table-header">Date</th>
+            <th class="table-header">Produit</th>
+            <th class="table-header">Entrepôt</th>
+            <th class="table-header">Type</th>
+            <th class="table-header text-right">Quantité</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let mvt of filteredMouvements | slice:(currentPage-1)*itemsPerPage:currentPage*itemsPerPage" 
+              class="hover:bg-gray-50 transition-colors">
+            <td class="table-cell">{{ mvt.date | date: 'dd/MM/yyyy' }}</td>
+            <td class="table-cell font-medium">{{ mvt.produitNom }}</td>
+            <td class="table-cell">{{ mvt.entrepotNom }}</td>
+            <td class="table-cell">
+              <span [class.bg-green-100]="mvt.type === 'ENTREE'" 
+                    [class.text-green-800]="mvt.type === 'ENTREE'"
+                    [class.bg-red-100]="mvt.type === 'SORTIE'"
+                    [class.text-red-800]="mvt.type === 'SORTIE'"
+                    class="px-2 py-1 rounded-full text-xs font-semibold">
+                {{ mvt.type === 'ENTREE' ? 'Entrée' : 'Sortie' }}
+              </span>
+            </td>
+            <td class="table-cell text-right font-medium" 
+                [class.text-green-600]="mvt.type === 'ENTREE'"
+                [class.text-red-600]="mvt.type === 'SORTIE'">
+              {{ mvt.type === 'ENTREE' ? '+' : '-' }}{{ mvt.quantite }}
+            </td>
+          </tr>
+          <tr *ngIf="filteredMouvements.length === 0">
+            <td colspan="5" class="table-cell text-center">Aucun mouvement trouvé</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200">
+      <div class="flex-1 flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Affichage de <span class="font-medium">{{(currentPage-1)*itemsPerPage+1}}</span> à 
+            <span class="font-medium">{{Math.min(currentPage*itemsPerPage, filteredMouvements.length)}}</span> sur 
+            <span class="font-medium">{{filteredMouvements.length}}</span> résultat(s)
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+            <button (click)="changePage(1)" [disabled]="currentPage === 1" class="pagination-nav rounded-l-md">
+              <span class="sr-only">Première</span>
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="pagination-nav">
+              <span class="sr-only">Précédent</span>
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            
+            <ng-container *ngFor="let page of getPages()">
+              <button (click)="changePage(page)" 
+                      [class.bg-blue-50]="page === currentPage"
+                      [class.border-blue-500]="page === currentPage"
+                      [class.text-blue-600]="page === currentPage"
+                      class="pagination-page">
+                {{ page }}
+              </button>
+            </ng-container>
+            
+            <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages" class="pagination-nav">
+              <span class="sr-only">Suivant</span>
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            <button (click)="changePage(totalPages)" [disabled]="currentPage === totalPages" class="pagination-nav rounded-r-md">
+              <span class="sr-only">Dernière</span>
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <!-- <app-stock-movement-modal *ngIf="showModal"
+                      
+                      (close)="closeModal()"
+                      (save)="onSaveMouvement($event)">
+  </app-stock-movement-modal> -->
+</div>

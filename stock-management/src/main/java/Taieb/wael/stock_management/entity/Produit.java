@@ -1,5 +1,6 @@
 package Taieb.wael.stock_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class Produit {
     private List<Stock> stocks;
 
     @OneToMany(mappedBy = "produit", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<MouvementStock> mouvements;
 
 }
